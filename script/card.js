@@ -1,6 +1,7 @@
 export default class Card {
   #value;
   #amount;
+  
   constructor(number) {
     this.#value = number;
     this.#amount = 4;

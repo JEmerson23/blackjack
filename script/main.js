@@ -1,4 +1,5 @@
 import Card from "/script/card.js";
+import PlayerCPU from "/script/playerCPU.js";
 
 //Jogo
 
@@ -7,9 +8,7 @@ class Game {
     this.screen = document.getElementById("canvas");
     this.screenContext = this.screen.getContext("2d");
     
-    this.deck = {
-      card:[],
-    };
+    this.deck = {card:[]};
     this.deck.getCard = () => {
       function numberRandom(){
         const RANDOM = n =>Math.round(Math.random()*n);
@@ -29,7 +28,30 @@ class Game {
     
     this.player = {
       current: null,
-      list: []
+      list: [new PlayerCPU()]
+    };
+    this.player.renderInventory = () =>{
+      for(let player of this.player.list){
+        
+        let playerInventory = player.getInventory(), {inventoryStyle} = player;
+        
+        let cardPosition = inventoryStyle.position.x;
+        
+        for(let inventoryCard of  playerInventory){
+          
+          let card = new Object(this.deck.card.find(card => card.getValue() == inventoryCard));
+         
+          card.texture.context.face = true;
+          card.texture.context.position = {
+           x:cardPosition,
+           y:inventoryStyle.position.y
+          };
+          
+          cardPosition += (card.texture.width + inventoryStyle.spaceBetweenCards);
+         
+          card.render(this.screenContext);
+        }
+      }
     };
     
     //---------------//
@@ -46,3 +68,7 @@ class Game {
 }
 
 const game = new Game();
+/*game.player.list[0].setCardInInventory(1)
+game.player.list[0].setCardInInventory(6)
+game.player.list[0].setCardInInventory(13)
+game.player.renderInventory()*/
